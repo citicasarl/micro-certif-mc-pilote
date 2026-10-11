@@ -36,4 +36,4 @@ Site officiel : [micro-certif.com](https://micro-certif.com)
 
 **Éditeur : CITICA – France**
 
-MC PILOTE est une application propriétaire. Ce dépôt présente la solution et ses fonctionnalités ; il ne contient pas son code source.
+MC PILOTE est une application propriétaire. Ce dépôt présente la solution et ses fonctionnalités ; il ne contient pas son code source mais le code d'outils secondaires liés à l'application.

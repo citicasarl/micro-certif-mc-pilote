@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vérificateur Open Badges 3.0 gratuit – lire et contrôler un badge numérique</title>
+<meta name="description" content="Collez ou déposez un badge Open Badges 3.0 (JSON, JWT, PNG ou SVG) : l'outil affiche son contenu en clair et signale les champs manquants ou mal formés. Gratuit, sans inscription, rien n'est envoyé sur un serveur.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vérificateur Open Badges 3.0 gratuit">
+<meta property="og:description" content="Lisez et contrôlez un badge numérique Open Badges 3.0 directement dans votre navigateur.">
+<meta property="og:locale" content="fr_FR">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Vérificateur Open Badges 3.0",
+  "description": "Outil gratuit pour lire un badge Open Badges 3.0 et contrôler sa structure : émetteur, bénéficiaire, dates de validité, champs obligatoires.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Tout navigateur récent",
+  "inLanguage": "fr",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "publisher": { "@type": "Organization", "name": "Micro-Certif", "url": "https://www.micro-certif.com/" }
+}
+</script>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --text:#1c2733; --muted:#5b6b7b; --line:#dce3ea;
+  --accent:#0b5d7a; --accent-text:#ffffff;
+  --ok:#17794a; --ok-bg:#e5f5ec; --warn:#8a5a00; --warn-bg:#fff4d6;
+  --err:#b3261e; --err-bg:#fde9e7; --info:#35506b; --info-bg:#e8eef5;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#12181f; --card:#1b232c; --text:#e6ecf2; --muted:#9aaaba; --line:#2d3945;
+    --accent:#4fb3d4; --accent-text:#08222c;
+    --ok:#6fd39f; --ok-bg:#173326; --warn:#f0c463; --warn-bg:#3a2f12;
+    --err:#ff9a92; --err-bg:#41201e; --info:#a9c0d8; --info-bg:#222f3d;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+header{padding:36px 0 8px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 10px}
+h2{font-size:1.3rem;margin:36px 0 10px}
+h3{font-size:1.05rem;margin:20px 0 6px}
+p{margin:0 0 12px}
+a{color:var(--accent)}
+.lead{color:var(--muted);font-size:1.05rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:18px 0}
+.card.drag{outline:3px dashed var(--accent);outline-offset:-6px}
+label{font-weight:600;display:block;margin-bottom:6px}
+textarea,input[type=email]{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);padding:10px;font:14px/1.45 ui-monospace,Consolas,Menlo,monospace}
+textarea{min-height:190px;resize:vertical}
+input[type=email]{font-family:inherit;font-size:15px}
+.hint{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+button,.filebtn{font:inherit;font-weight:600;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--text)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text)}
+button:focus-visible,.filebtn:focus-within,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+.verdict{border-radius:8px;padding:12px 14px;font-weight:700;margin-bottom:14px}
+.verdict.good{background:var(--ok-bg);color:var(--ok)}
+.verdict.mid{background:var(--warn-bg);color:var(--warn)}
+.verdict.bad{background:var(--err-bg);color:var(--err)}
+dl{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:6px 14px;margin:0}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+@media (max-width:520px){dl{grid-template-columns:1fr}dd{margin-bottom:8px}}
+ul.checks{list-style:none;margin:0;padding:0}
+ul.checks li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+ul.checks li:first-child{border-top:0}
+.tag{flex:0 0 82px;text-align:center;font-size:.78rem;font-weight:700;border-radius:6px;padding:3px 0;margin-top:2px}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}
+.tag.err{background:var(--err-bg);color:var(--err)}
+.tag.info{background:var(--info-bg);color:var(--info)}
+.mailrow{display:flex;gap:8px;flex-wrap:wrap}
+.mailrow input{flex:1 1 220px}
+.mailres{margin-top:8px;font-weight:600}
+code{font:.9em ui-monospace,Consolas,Menlo,monospace;background:var(--info-bg);padding:1px 5px;border-radius:4px}
+footer{margin:44px 0 30px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.93rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Vérificateur Open Badges 3.0</h1>
+  <p class="lead">Collez ou déposez un badge numérique : l'outil affiche son contenu en clair (émetteur, bénéficiaire, dates, critères) et signale les champs manquants ou mal formés. Gratuit, sans inscription. Le badge reste dans votre navigateur, rien n'est envoyé sur un serveur.</p>
+</header>
+
+<main>
+  <section class="card" id="zone" aria-label="Badge à vérifier">
+    <label for="src">Badge à vérifier</label>
+    <textarea id="src" spellcheck="false" placeholder='Collez ici le JSON du badge ({ "@context": [...] }) ou sa version JWT (eyJ...)'></textarea>
+    <p class="hint">Vous pouvez aussi déposer un fichier ici : <code>.json</code>, <code>.jwt</code>, ou une image de badge <code>.png</code> / <code>.svg</code> contenant ses données.</p>
+    <div class="actions">
+      <button type="button" class="primary" id="btnCheck">Vérifier le badge</button>
+      <label class="filebtn">Choisir un fichier<input type="file" id="file" accept=".json,.jsonld,.jwt,.txt,.png,.svg,application/json,image/png,image/svg+xml"></label>
+      <button type="button" id="btnSample">Charger un exemple</button>
+      <button type="button" id="btnClear">Effacer</button>
+    </div>
+  </section>
+
+  <div id="out" aria-live="polite"></div>
+
+  <section>
+    <h2>Ce que l'outil contrôle</h2>
+    <p>Le vérificateur compare le badge aux exigences de la spécification <strong>Open Badges 3.0</strong> publiée par 1EdTech :</p>
+    <ul>
+      <li>les contextes JSON-LD (<code>@context</code>) et les types attendus (<code>VerifiableCredential</code>, <code>OpenBadgeCredential</code>) ;</li>
+      <li>l'identifiant du badge et l'émetteur (<code>issuer</code>) ;</li>
+      <li>les dates de début et de fin de validité, et si le badge est expiré ;</li>
+      <li>le bénéficiaire (<code>credentialSubject</code>) et la manière dont il est identifié ;</li>
+      <li>la réalisation certifiée (<code>achievement</code>) : nom, description, critères ;</li>
+      <li>la présence d'une signature (<code>proof</code> ou format JWT).</li>
+    </ul>
+    <p><strong>Limites.</strong> L'outil contrôle la structure du badge. Il ne vérifie pas la signature cryptographique et n'interroge pas le service de révocation de l'émetteur : un badge « conforme » ici est bien formé, ce qui ne prouve pas à lui seul son authenticité.</p>
+
+    <h2>Questions fréquentes</h2>
+    <h3>Qu'est-ce qu'un Open Badge 3.0 ?</h3>
+    <p>Un Open Badge est une attestation numérique de compétence, de formation ou de réalisation. La version 3.0 s'appuie sur le modèle Verifiable Credentials du W3C : le badge est un document JSON signé par son émetteur, que chacun peut conserver, partager et faire vérifier.</p>
+    <h3>Où trouver le JSON de mon badge ?</h3>
+    <p>La plateforme qui a émis le badge propose en général un téléchargement au format JSON ou une image PNG ou SVG dans laquelle les données sont intégrées. Les deux peuvent être déposés ici.</p>
+    <h3>Mon badge est en version 2.0, est-il accepté ?</h3>
+    <p>Non. Les badges Open Badges 2.0 ont une structure différente ; l'outil les reconnaît et vous l'indique, sans les contrôler.</p>
+    <h3>Comment savoir si un badge m'appartient ?</h3>
+    <p>Quand le bénéficiaire est identifié par une adresse e-mail, souvent enregistrée sous forme d'empreinte, saisissez votre adresse dans le champ proposé sous le résultat : l'outil vous dit si elle correspond.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Outil gratuit et libre proposé par <a href="https://www.micro-certif.com/">Micro-Certif</a>, plateforme française d'émission de badges numériques Open Badges 3.0 pour les organismes de formation, les entreprises et les certificateurs.</p>
+</footer>
+</div>
+
+<script id="app">
+'use strict';
+
+var CTX_VC2 = 'https://www.w3.org/ns/credentials/v2';
+var CTX_VC1 = 'https://www.w3.org/2018/credentials/v1';
+var CTX_OB3 = 'https://purl.imsglobal.org/spec/ob/v3p0/context';
+
+var SAMPLE = {
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"
+  ],
+  "id": "https://exemple.fr/badges/attributions/1234",
+  "type": ["VerifiableCredential", "OpenBadgeCredential"],
+  "name": "Gestion de projet – niveau 1",
+  "issuer": {
+    "id": "https://exemple.fr/emetteur",
+    "type": ["Profile"],
+    "name": "Organisme Exemple"
+  },
+  "validFrom": "2026-10-03T09:00:00Z",
+  "validUntil": "2029-10-03T09:00:00Z",
+  "credentialSubject": {
+    "type": ["AchievementSubject"],
+    "identifier": [{
+      "type": "IdentityObject",
+      "identityHash": "julie.martin@exemple.fr",
+      "identityType": "emailAddress",
+      "hashed": false
+    }],
+    "achievement": {
+      "id": "https://exemple.fr/badges/7",
+      "type": ["Achievement"],
+      "name": "Gestion de projet – niveau 1",
+      "description": "Atteste la capacité à planifier et suivre un projet simple.",
+      "criteria": { "narrative": "Avoir conduit un projet complet et présenté son bilan devant un jury." }
+    }
+  },
+  "evidence": [{ "type": ["Evidence"], "narrative": "Dossier validé par le jury du 3 octobre 2026." }],
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "eddsa-rdfc-2022",
+    "created": "2026-10-03T09:00:00Z",
+    "verificationMethod": "https://exemple.fr/emetteur#cle-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zExempleFictifNonVerifiable"
+  }]
+};
+
+/* ---------- utilitaires ---------- */
+function arr(v) { return v === undefined || v === null ? [] : (Array.isArray(v) ? v : [v]); }
+function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function txt(v) { return typeof v === 'string' ? v.trim() : ''; }
+function types(o) { return isObj(o) ? arr(o.type).filter(function (x) { return typeof x === 'string'; }) : []; }
+function isUri(s) { return typeof s === 'string' && /^[a-z][a-z0-9+.\-]*:\S+$/i.test(s); }
+function isDate(s) {
+  return typeof s === 'string' &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+\-]\d{2}:\d{2})$/.test(s) &&
+    !isNaN(Date.parse(s));
+}
+function b64u(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  var bin = atob(s), u = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(u);
+}
+
+/* ---------- lecture des formats ---------- */
+function parseText(text) {
+  var t = (text || '').replace(/^\uFEFF/, '').trim();
+  if (!t) throw new Error('Aucun contenu à vérifier. Collez le JSON du badge ou déposez un fichier.');
+  if (t.charAt(0) === '{' || t.charAt(0) === '[') {
+    var j;
+    try { j = JSON.parse(t); }
+    catch (e) { throw new Error('Le JSON est illisible : ' + e.message); }
+    if (!isObj(j)) throw new Error('Le JSON doit décrire un seul badge (un objet), pas une liste.');
+    return { cred: j, format: 'json' };
+  }
+  if (/^[\w\-]+\.[\w\-]+\.[\w\-]*$/.test(t)) {
+    var p = t.split('.'), head, body;
+    try { head = JSON.parse(b64u(p[0])); body = JSON.parse(b64u(p[1])); }
+    catch (e2) { throw new Error('Le jeton JWT est illisible (encodage ou JSON incorrect).'); }
+    if (!isObj(body)) throw new Error('Le contenu du jeton JWT n\'est pas un badge.');
+    return { cred: isObj(body.vc) ? body.vc : body, format: 'jwt', alg: isObj(head) ? txt(head.alg) : '' };
+  }
+  if (/<svg[\s>]/i.test(t)) return parseSvg(t);
+  throw new Error('Format non reconnu. Formats acceptés : JSON, JWT, image PNG ou SVG contenant un badge.');
+}
+
+function parseSvg(text) {
+  var doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+  var all = doc.getElementsByTagName('*'), node = null, old = false;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].localName === 'credential') { node = all[i]; break; }
+    if (all[i].localName === 'assertion') old = true;
+  }
+  if (!node) {
+    throw new Error(old
+      ? 'Cette image SVG contient un badge Open Badges 2.0. L\'outil ne contrôle que la version 3.0.'
+      : 'Cette image SVG ne contient pas de données Open Badges 3.0.');
+  }
+  var inner = node.getAttribute('verify') || node.textContent;
+  if (!txt(inner)) throw new Error('La balise du badge dans l\'image SVG est vide.');
+  if (/<svg[\s>]/i.test(inner)) throw new Error('Contenu inattendu dans l\'image SVG.');
+  return parseText(inner);
+}
+
+function parsePng(buf) {
+  var u = new Uint8Array(buf), sig = [137, 80, 78, 71, 13, 10, 26, 10], i;
+  for (i = 0; i < 8; i++) if (u[i] !== sig[i]) throw new Error('Ce fichier n\'est pas une image PNG valide.');
+  var dv = new DataView(buf), pos = 8, old = false, latin = new TextDecoder('latin1');
+  while (pos + 12 <= u.length) {
+    var len = dv.getUint32(pos), type = latin.decode(u.subarray(pos + 4, pos + 8));
+    var start = pos + 8, end = start + len;
+    if (end > u.length) break;
+    if (type === 'iTXt' || type === 'tEXt') {
+      var k = start;
+      while (k < end && u[k] !== 0) k++;
+      var key = latin.decode(u.subarray(start, k));
+      if (key === 'openbadges') old = true;
+      if (type === 'iTXt' && key === 'openbadgecredential') {
+        if (u[k + 1] !== 0) throw new Error('Les données du badge dans l\'image PNG sont compressées, ce que la spécification n\'autorise pas.');
+        var q = k + 3;
+        while (q < end && u[q] !== 0) q++;   // langue
+        q++;
+        while (q < end && u[q] !== 0) q++;   // mot-clé traduit
+        q++;
+        return parseText(new TextDecoder('utf-8').decode(u.subarray(q, end)));
+      }
+    }
+    if (type === 'IEND') break;
+    pos = end + 4;
+  }
+  throw new Error(old
+    ? 'Cette image PNG contient un badge Open Badges 2.0. L\'outil ne contrôle que la version 3.0.'
+    : 'Cette image PNG ne contient pas de données Open Badges 3.0.');
+}
+
+/* ---------- contrôle ---------- */
+function validate(cred, meta) {
+  meta = meta || { format: 'json' };
+  var checks = [];
+  function add(level, msg) { checks.push({ level: level, msg: msg }); }
+
+  var ctx = arr(cred['@context']);
+  var t = types(cred);
+  var isV2 = ctx.some(function (x) { return typeof x === 'string' && x.indexOf('openbadges/v2') !== -1; }) ||
+             t.indexOf('Assertion') !== -1;
+  if (isV2) {
+    add('err', 'Ce badge est au format Open Badges 2.0. L\'outil ne contrôle que la version 3.0.');
+    return { checks: checks, view: null };
+  }
+
+  // Contextes
+  if (!ctx.length) add('err', '@context est absent.');
+  else {
+    if (ctx[0] === CTX_VC2) add('ok', 'Contexte Verifiable Credentials 2.0 en première position.');
+    else if (ctx[0] === CTX_VC1) add('warn', 'Le badge utilise le contexte Verifiable Credentials 1.1. La version finale d\'Open Badges 3.0 demande la version 2.0 (' + CTX_VC2 + ').');
+    else add('err', 'Le premier élément de @context doit être ' + CTX_VC2 + '.');
+    if (ctx.some(function (x) { return typeof x === 'string' && x.indexOf(CTX_OB3) === 0; })) add('ok', 'Contexte Open Badges 3.0 présent.');
+    else add('err', 'Le contexte Open Badges 3.0 (' + CTX_OB3 + '-3.0.x.json) est absent de @context.');
+  }
+
+  // Types
+  if (t.indexOf('VerifiableCredential') === -1) add('err', 'Le type VerifiableCredential est absent.');
+  if (t.indexOf('OpenBadgeCredential') === -1 && t.indexOf('AchievementCredential') === -1) add('err', 'Le type OpenBadgeCredential (ou AchievementCredential) est absent.');
+  else if (t.indexOf('VerifiableCredential') !== -1) add('ok', 'Types du badge corrects.');
+
+  // Identifiant
+  if (cred.id === undefined) add('err', 'L\'identifiant du badge (id) est absent.');
+  else if (!isUri(cred.id)) add('err', 'L\'identifiant du badge (id) n\'est pas une adresse (URI) valide.');
+  else add('ok', 'Identifiant du badge présent.');
+
+  // Émetteur
+  var iss = cred.issuer, issuerId = '', issuerName = '';
+  if (iss === undefined || iss === null) add('err', 'L\'émetteur (issuer) est absent.');
+  else if (typeof iss === 'string') {
+    issuerId = iss;
+    if (isUri(iss)) add('ok', 'Émetteur désigné par son adresse.');
+    else add('err', 'L\'émetteur (issuer) n\'est pas une adresse (URI) valide.');
+  } else if (isObj(iss)) {
+    issuerId = txt(iss.id); issuerName = txt(iss.name);
+    var issOk = true;
+    if (!isUri(iss.id)) { add('err', 'L\'émetteur n\'a pas d\'identifiant (issuer.id) valide.'); issOk = false; }
+    if (types(iss).indexOf('Profile') === -1) { add('err', 'L\'émetteur doit porter le type Profile (issuer.type).'); issOk = false; }
+    if (!issuerName) add('warn', 'L\'émetteur n\'a pas de nom (issuer.name) : le badge sera peu lisible.');
+    if (issOk) add('ok', 'Émetteur correctement décrit.');
+  } else add('err', 'L\'émetteur (issuer) doit être une adresse ou un objet.');
+
+  // Dates
+  var vf = cred.validFrom, vu = cred.validUntil, state = '';
+  if (vf === undefined && cred.issuanceDate !== undefined) {
+    vf = cred.issuanceDate;
+    add('warn', 'La date de début utilise issuanceDate (ancien modèle). Open Badges 3.0 attend validFrom.');
+  }
+  if (vu === undefined && cred.expirationDate !== undefined) {
+    vu = cred.expirationDate;
+    add('warn', 'La date de fin utilise expirationDate (ancien modèle). Open Badges 3.0 attend validUntil.');
+  }
+  var vfOk = isDate(vf), vuOk = isDate(vu);
+  if (vf === undefined) add('err', 'La date de début de validité (validFrom) est absente.');
+  else if (!vfOk) add('err', 'La date de début de validité est mal formée. Format attendu : 2026-10-03T09:00:00Z.');
+  if (vu !== undefined && !vuOk) add('err', 'La date de fin de validité est mal formée. Format attendu : 2029-10-03T09:00:00Z.');
+  if (vfOk && vuOk && Date.parse(vu) <= Date.parse(vf)) add('err', 'La date de fin de validité précède la date de début.');
+  if (vfOk) {
+    var now = Date.now();
+    if (Date.parse(vf) > now) { state = 'Pas encore valide'; add('warn', 'Le badge n\'est pas encore valide : sa date de début est dans le futur.'); }
+    else if (vuOk && Date.parse(vu) < now) { state = 'Expiré'; add('warn', 'Le badge est expiré.'); }
+    else { state = 'En cours de validité'; add('ok', 'Dates correctes, badge en cours de validité.'); }
+    if (vu === undefined) add('info', 'Aucune date de fin de validité : le badge n\'expire pas.');
+  }
+
+  // Bénéficiaire
+  var cs = cred.credentialSubject, subjectId = '', identifiers = [], ach = null;
+  if (Array.isArray(cs)) {
+    if (cs.length > 1) add('warn', 'credentialSubject contient plusieurs bénéficiaires ; seul le premier est examiné.');
+    cs = cs[0];
+  }
+  if (!isObj(cs)) add('err', 'Le bénéficiaire (credentialSubject) est absent.');
+  else {
+    if (types(cs).indexOf('AchievementSubject') === -1) add('err', 'Le bénéficiaire doit porter le type AchievementSubject (credentialSubject.type).');
+    subjectId = txt(cs.id);
+    identifiers = arr(cs.identifier).filter(isObj);
+    if (cs.id !== undefined && !isUri(cs.id)) add('err', 'L\'identifiant du bénéficiaire (credentialSubject.id) n\'est pas une adresse (URI) valide.');
+    if (!subjectId && !identifiers.length) add('err', 'Le bénéficiaire n\'est pas identifié : ni id ni identifier.');
+    else add('ok', 'Bénéficiaire identifié.');
+    identifiers.forEach(function (idf, n) {
+      if (!txt(idf.identityHash) || !txt(idf.identityType) || typeof idf.hashed !== 'boolean') {
+        add('warn', 'L\'identifiant n° ' + (n + 1) + ' du bénéficiaire est incomplet (identityHash, identityType et hashed sont attendus).');
+      }
+    });
+
+    // Réalisation
+    ach = cs.achievement;
+    if (Array.isArray(ach)) ach = ach[0];
+    if (!isObj(ach)) { add('err', 'La réalisation certifiée (credentialSubject.achievement) est absente.'); ach = null; }
+    else {
+      var before = checks.length;
+      if (!isUri(ach.id)) add('err', 'La réalisation n\'a pas d\'identifiant (achievement.id) valide.');
+      if (types(ach).indexOf('Achievement') === -1) add('err', 'La réalisation doit porter le type Achievement (achievement.type).');
+      if (!txt(ach.name)) add('err', 'Le nom de la réalisation (achievement.name) est absent.');
+      if (!txt(ach.description)) add('err', 'La description de la réalisation (achievement.description) est absente.');
+      if (!isObj(ach.criteria)) add('err', 'Les critères d\'obtention (achievement.criteria) sont absents.');
+      else if (!txt(ach.criteria.narrative) && !txt(ach.criteria.id)) add('warn', 'Les critères d\'obtention sont vides : ni texte (narrative) ni adresse (id).');
+      if (checks.length === before) add('ok', 'Réalisation certifiée complète : nom, description, critères.');
+    }
+  }
+
+  // Signature
+  var sig = '';
+  if (meta.format === 'jwt') {
+    if (!meta.alg || meta.alg.toLowerCase() === 'none') add('err', 'Le jeton JWT n\'est pas signé (algorithme absent ou « none »).');
+    else { sig = 'JWT (' + meta.alg + ')'; add('ok', 'Badge transmis sous forme de jeton JWT signé (' + meta.alg + ').'); }
+  } else {
+    var proofs = arr(cred.proof).filter(isObj);
+    if (!proofs.length) add('warn', 'Aucune preuve (proof) : le badge n\'est pas signé, son authenticité ne peut pas être établie.');
+    else {
+      var p = proofs[0], label = txt(p.type) + (txt(p.cryptosuite) ? ' (' + p.cryptosuite + ')' : '');
+      if (!txt(p.type)) add('err', 'La preuve (proof) n\'indique pas son type.');
+      else if (!txt(p.proofValue) && !txt(p.jws)) add('err', 'La preuve (proof) ne contient pas de valeur de signature.');
+      else { sig = label; add('ok', 'Preuve présente : ' + label + '.'); }
+    }
+  }
+  add('info', 'La signature cryptographique n\'est pas vérifiée par cet outil : seule sa présence est contrôlée.');
+  if (cred.credentialStatus !== undefined) add('info', 'Le badge déclare un service de révocation, que cet outil n\'interroge pas.');
+
+  var view = {
+    name: (ach && txt(ach.name)) || txt(cred.name),
+    description: (ach && txt(ach.description)) || txt(cred.description),
+    issuerName: issuerName, issuerId: issuerId,
+    subjectId: subjectId, identifiers: identifiers,
+    validFrom: vfOk ? vf : '', validUntil: vuOk ? vu : '', state: state,
+    criteria: ach && isObj(ach.criteria) ? (txt(ach.criteria.narrative) || txt(ach.criteria.id)) : '',
+    evidence: arr(cred.evidence).filter(isObj).map(function (e) { return txt(e.name) || txt(e.narrative) || txt(e.id); }).filter(Boolean),
+    signature: sig, id: txt(cred.id)
+  };
+  return { checks: checks, view: view };
+}
+
+/* ---------- correspondance d'une adresse e-mail ---------- */
+function sha256hex(str) {
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+    return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  });
+}
+function emailMatches(email, idf) {
+  var e = email.trim(), hash = txt(idf.identityHash);
+  if (!idf.hashed) return Promise.resolve(hash.toLowerCase() === e.toLowerCase());
+  var m = /^sha256\$([0-9a-f]{64})$/i.exec(hash);
+  if (!m) return Promise.reject(new Error('Type d\'empreinte non pris en charge.'));
+  if (typeof crypto === 'undefined' || !crypto.subtle) return Promise.reject(new Error('Le calcul d\'empreinte n\'est disponible que sur une page en HTTPS.'));
+  var salt = txt(idf.salt), want = m[1].toLowerCase();
+  return Promise.all([sha256hex(e + salt), sha256hex(e.toLowerCase() + salt)]).then(function (r) {
+    return r[0] === want || r[1] === want;
+  });
+}
+
+/* ---------- interface ---------- */
+if (typeof document !== 'undefined') (function () {
+  var src = document.getElementById('src'), out = document.getElementById('out'), zone = document.getElementById('zone');
+  var LABELS = { ok: 'Conforme', warn: 'Attention', err: 'Erreur', info: 'À savoir' };
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  function linkOrText(s) {
+    if (/^https?:\/\//i.test(s)) {
+      var a = el('a', '', s);
+      a.href = s; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow';
+      return a;
+    }
+    return document.createTextNode(s);
+  }
+  function fmt(d) { return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function row(dl, label, value) {
+    if (!value) return;
+    dl.appendChild(el('dt', '', label));
+    var dd = el('dd');
+    dd.appendChild(typeof value === 'string' ? linkOrText(value) : value);
+    dl.appendChild(dd);
+  }
+  function showError(msg) {
+    out.replaceChildren();
+    var c = el('section', 'card');
+    c.appendChild(el('div', 'verdict bad', msg));
+    out.appendChild(c);
+  }
+
+  function render(res) {
+    out.replaceChildren();
+    var nErr = res.checks.filter(function (c) { return c.level === 'err'; }).length;
+    var nWarn = res.checks.filter(function (c) { return c.level === 'warn'; }).length;
+    var card = el('section', 'card');
+    card.appendChild(el('h2', '', 'Résultat'));
+    card.firstChild.style.marginTop = '0';
+    if (nErr) card.appendChild(el('div', 'verdict bad', 'Badge non conforme : ' + nErr + (nErr > 1 ? ' erreurs' : ' erreur') + (nWarn ? ' et ' + nWarn + (nWarn > 1 ? ' points' : ' point') + ' d\'attention' : '') + '.'));
+    else if (nWarn) card.appendChild(el('div', 'verdict mid', 'Structure conforme à Open Badges 3.0, avec ' + nWarn + (nWarn > 1 ? ' points' : ' point') + ' d\'attention.'));
+    else card.appendChild(el('div', 'verdict good', 'Structure conforme à Open Badges 3.0.'));
+
+    var v = res.view;
+    if (v) {
+      var dl = el('dl');
+      row(dl, 'Badge', v.name);
+      row(dl, 'Description', v.description);
+      row(dl, 'Émetteur', v.issuerName || v.issuerId);
+      if (v.issuerName) row(dl, 'Adresse de l\'émetteur', v.issuerId);
+      var who = v.subjectId;
+      if (!who && v.identifiers.length) {
+        var f = v.identifiers[0];
+        who = f.hashed ? 'Identifié par une empreinte (' + (txt(f.identityType) || 'type non précisé') + ')' : txt(f.identityHash);
+      }
+      row(dl, 'Bénéficiaire', who);
+      row(dl, 'Valide à partir du', v.validFrom ? fmt(v.validFrom) : '');
+      row(dl, 'Valide jusqu\'au', v.validUntil ? fmt(v.validUntil) : (v.validFrom ? 'Sans date de fin' : ''));
+      row(dl, 'État', v.state);
+      row(dl, 'Critères', v.criteria);
+      row(dl, 'Preuves', v.evidence.join(' · '));
+      row(dl, 'Signature', v.signature);
+      row(dl, 'Identifiant', v.id);
+      card.appendChild(dl);
+    }
+    out.appendChild(card);
+
+    var mails = v ? v.identifiers.filter(function (i) { return txt(i.identityType) === 'emailAddress' && txt(i.identityHash); }) : [];
+    if (mails.length) {
+      var mc = el('section', 'card');
+      var lab = el('label', '', 'Ce badge est-il attribué à cette adresse e-mail ?');
+      lab.htmlFor = 'mail';
+      var line = el('div', 'mailrow'), inp = el('input'), btn = el('button', '', 'Comparer'), resu = el('div', 'mailres');
+      inp.type = 'email'; inp.id = 'mail'; inp.placeholder = 'prenom.nom@exemple.fr'; inp.autocomplete = 'email';
+      btn.type = 'button';
+      resu.setAttribute('aria-live', 'polite');
+      function compare() {
+        if (!inp.value.trim()) { resu.textContent = 'Saisissez une adresse e-mail.'; return; }
+        Promise.all(mails.map(function (m) { return emailMatches(inp.value, m); })).then(function (r) {
+          resu.textContent = r.indexOf(true) !== -1
+            ? 'Oui : cette adresse correspond au bénéficiaire du badge.'
+            : 'Non : cette adresse ne correspond pas au bénéficiaire du badge.';
+        }).catch(function (e) { resu.textContent = e.message; });
+      }
+      btn.addEventListener('click', compare);
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') compare(); });
+      line.appendChild(inp); line.appendChild(btn);
+      mc.appendChild(lab); mc.appendChild(line); mc.appendChild(resu);
+      out.appendChild(mc);
+    }
+
+    var lc = el('section', 'card');
+    var h = el('h2', '', 'Détail des contrôles');
+    h.style.marginTop = '0';
+    lc.appendChild(h);
+    var ul = el('ul', 'checks'), order = { err: 0, warn: 1, ok: 2, info: 3 };
+    res.checks.slice().sort(function (a, b) { return order[a.level] - order[b.level]; }).forEach(function (c) {
+      var li = el('li');
+      li.appendChild(el('span', 'tag ' + c.level, LABELS[c.level]));
+      li.appendChild(el('span', '', c.msg));
+      ul.appendChild(li);
+    });
+    lc.appendChild(ul);
+    out.appendChild(lc);
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function run(parsed) { render(validate(parsed.cred, parsed)); }
+  function check() {
+    try { run(parseText(src.value)); }
+    catch (e) { showError(e.message); }
+  }
+  function loadFile(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showError('Fichier trop volumineux (5 Mo maximum).'); return; }
+    var isPng = /\.png$/i.test(file.name) || file.type === 'image/png';
+    var reader = new FileReader();
+    reader.onerror = function () { showError('Le fichier n\'a pas pu être lu.'); };
+    reader.onload = function () {
+      try {
+        var parsed = isPng ? parsePng(reader.result) : parseText(reader.result);
+        src.value = JSON.stringify(parsed.cred, null, 2);
+        run(parsed);
+      } catch (e) { showError(e.message); }
+    };
+    if (isPng) reader.readAsArrayBuffer(file); else reader.readAsText(file);
+  }
+
+  document.getElementById('btnCheck').addEventListener('click', check);
+  document.getElementById('btnSample').addEventListener('click', function () {
+    src.value = JSON.stringify(SAMPLE, null, 2);
+    check();
+  });
+  document.getElementById('btnClear').addEventListener('click', function () {
+    src.value = ''; out.replaceChildren(); src.focus();
+  });
+  document.getElementById('file').addEventListener('change', function (e) {
+    loadFile(e.target.files[0]); e.target.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    zone.addEventListener(ev, function (e) { e.preventDefault(); zone.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    zone.addEventListener(ev, function (e) { e.preventDefault(); zone.classList.remove('drag'); });
+  });
+  zone.addEventListener('drop', function (e) {
+    if (e.dataTransfer && e.dataTransfer.files.length) loadFile(e.dataTransfer.files[0]);
+  });
+})();
+</script>
+</body>
+</html>

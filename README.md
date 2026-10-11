@@ -1,39 +1,67 @@
-# MC PILOTE – Pilotage et micro-certification des compétences
+# Vérificateur Open Badges 3.0
 
-**MC PILOTE** est une application en ligne développée par [Micro-Certif](https://micro-certif.com), dédiée au pilotage, à l'évaluation, à la reconnaissance et à la micro-certification des compétences.
+Outil gratuit pour **lire et contrôler un badge numérique Open Badges 3.0** directement dans le navigateur.
 
-Elle permet aux organismes de formation, entreprises, collectivités et professionnels de l'accompagnement de valoriser les compétences acquises dans des contextes professionnels, éducatifs ou associatifs.
+**Utiliser l'outil en ligne : https://github.com/citicasarl/micro-certif-mc-pilote
 
-## Fonctionnalités principales
+Proposé par [Micro-Certif](https://www.micro-certif.com/), plateforme française d'émission de badges Open Badges 3.0.
 
-- **Référentiels de compétences** : accéder à un catalogue de plus de 200 compétences et identifier celles qui correspondent à ses activités.
-- **Micro-certification** : reconnaître et valoriser les compétences grâce aux badges numériques conformes au standard Open Badges 3.0.
-- **Pilotage des compétences** : organiser des parcours de développement et de reconnaissance des compétences.
-- **Cartographie des compétences** : visualiser les compétences et accompagner leur développement.
-- **Passeports de compétences** : valoriser les acquis et les certifications des bénéficiaires.
+## Ce que fait l'outil
 
-## De nouvelles opportunités pour les professionnels
+- Lit un badge collé ou déposé : JSON, jeton JWT, image PNG ou SVG contenant les données du badge.
+- Affiche le contenu en clair : badge, émetteur, bénéficiaire, dates de validité, critères, preuves.
+- Contrôle la structure selon la spécification Open Badges 3.0 de 1EdTech : contextes, types, identifiant, émetteur, dates, bénéficiaire, réalisation certifiée, présence d'une signature.
+- Indique si le badge est expiré ou pas encore valide.
+- Permet de vérifier qu'une adresse e-mail correspond au bénéficiaire, y compris quand elle est enregistrée sous forme d'empreinte SHA-256.
+- Reconnaît les badges Open Badges 2.0 et le signale.
 
-MC PILOTE permet notamment de :
+Tout le traitement se fait dans le navigateur : le badge n'est envoyé nulle part.
 
-- Intégrer la reconnaissance des compétences dans les parcours de formation.
-- Valoriser les acquis issus de l'AFEST, du tutorat et de l'accompagnement professionnel.
-- Concevoir de nouvelles prestations d'évaluation et de micro-certification.
-- Développer des parcours individualisés de compétences.
-- Proposer des services innovants de reconnaissance des acquis.
+## Limites
 
-## Open Badges 3.0
+L'outil contrôle la structure du badge. Il ne vérifie pas la signature cryptographique et n'interroge pas le service de révocation de l'émetteur. Un badge bien formé n'est donc pas, à lui seul, une preuve d'authenticité.
 
-MC PILOTE s'inscrit dans l'écosystème des badges numériques et des micro-certifications, en s'appuyant sur le standard international Open Badges 3.0.
+## Installation
 
-## Découvrir MC PILOTE
+Un seul fichier, sans dépendance : `index.html`.
 
-**[Accéder à MC PILOTE](https://micro-certif.com/MC_Pilote/)**
+- **En local** : ouvrir `index.html` dans un navigateur.
+- **GitHub Pages** : dans le dépôt, *Settings › Pages*, choisir la branche `main` et le dossier racine. L'outil est en ligne quelques minutes plus tard.
+- **Sur votre site** : copier `index.html` sur n'importe quel hébergement en HTTPS.
 
-Site officiel : [micro-certif.com](https://micro-certif.com)
+## Licence
+
+MIT. Voir le fichier `LICENSE`.
 
 ---
 
-**Éditeur : CITICA – France**
+# Open Badges 3.0 Validator (English)
 
-MC PILOTE est une application propriétaire. Ce dépôt présente la solution et ses fonctionnalités ; il ne contient pas son code source mais le code d'outils secondaires liés à l'application.
+A free, browser-based tool to **read and check an Open Badges 3.0 credential**.
+
+**Try it online: https://github.com/citicasarl/micro-certif-mc-pilote (interface in French)
+
+Built by [Micro-Certif](https://www.micro-certif.com/), a French Open Badges 3.0 issuing platform.
+
+## Features
+
+- Accepts pasted or dropped credentials: JSON, JWT, or a baked PNG / SVG badge image.
+- Shows the content in plain language: badge, issuer, recipient, validity dates, criteria, evidence.
+- Checks the structure against the 1EdTech Open Badges 3.0 specification: contexts, types, id, issuer, dates, credential subject, achievement, presence of a proof.
+- Flags expired and not-yet-valid badges.
+- Checks whether an email address matches the recipient, including salted SHA-256 hashed identifiers.
+- Detects Open Badges 2.0 assertions and says so.
+
+Everything runs client-side: the badge never leaves the browser.
+
+## Limitations
+
+This tool checks structure only. It does not verify the cryptographic signature and does not query the issuer's revocation service.
+
+## Setup
+
+A single dependency-free file, `index.html`. Open it locally, or enable GitHub Pages on the `main` branch.
+
+## License
+
+MIT. See `LICENSE`.

@@ -1,1 +1,558 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MC Pilote — Un catalogue de badges de compétences prêts à attribuer</title>
+<meta name="description" content="MC Pilote : 206 badges numériques Open Badges 3.0 prêts à attribuer, classés en 14 domaines et 6 secteurs. Rôles, compétences visibles et compétences tacites : reconnaissez toutes les compétences de vos équipes.">
+<meta property="og:title" content="MC Pilote — Toutes vos compétences méritent d'être reconnues">
+<meta property="og:description" content="206 badges Open Badges 3.0 prêts à attribuer pour la fonction publique, la santé et les entreprises.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ====== CHARTE : ajustez ces variables à votre site ====== */
+  :root{
+    --primary:#0F4C75;      /* bleu institutionnel */
+    --primary-dark:#0B3554;
+    --primary-light:#E8F1F8;
+    --teal:#0E9F9A;
+    --teal-light:#E6F6F5;
+    --accent:#F2A93B;
+    --ink:#14263A;
+    --muted:#5F6B7A;
+    --bg:#F6F8FB;
+    --border:#E2E8F0;
+    --vital:#B42318; --critique:#D9690F; --important:#2F7DD1;
+    --radius:18px;
+    --font:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.6;font-size:16px;overflow-x:hidden}
+  a{color:var(--primary)}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 16px}
+  h1,h2,h3{line-height:1.2;margin:0}
+  .eyebrow{display:inline-block;font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:var(--teal-light);padding:5px 12px;border-radius:999px;margin-bottom:14px}
+  .section{padding:76px 0}
+  .alt{background:#fff}
+  .section-head{text-align:center;max-width:700px;margin:0 auto 44px}
+  .section-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;margin-bottom:12px}
+  .section-head p{color:var(--muted);margin:0;font-size:1.04rem}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-weight:600;font-size:.98rem;padding:12px 24px;border-radius:999px;text-decoration:none;border:2px solid transparent;cursor:pointer;transition:transform .15s,background .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-accent{background:var(--accent);color:var(--ink);box-shadow:0 8px 20px rgba(242,169,59,.35)}
+  .btn-ghost{color:#fff;border-color:rgba(255,255,255,.55)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-dark)}
+
+  /* ====== HERO ====== */
+  .hero{background:radial-gradient(circle at 15% 15%,#1B6FA8 0,transparent 45%),radial-gradient(circle at 90% 80%,#0E9F9A 0,transparent 40%),var(--primary-dark);color:#fff;padding:64px 0 84px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  @media (max-width:880px){.hero-grid{grid-template-columns:1fr;text-align:center}}
+  .logo{font-weight:800;font-size:1.35rem;display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
+  .logo i{width:34px;height:34px;border-radius:10px;background:var(--teal);display:inline-flex;align-items:center;justify-content:center}
+  .logo i svg{width:20px;height:20px}
+  .hero h1{font-size:clamp(1.9rem,4.6vw,3.1rem);font-weight:800;margin-bottom:16px}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero .lead{font-size:1.1rem;color:#D6E6F2;max-width:560px;margin:0 0 26px}
+  @media (max-width:880px){.hero .lead{margin-left:auto;margin-right:auto}}
+  .actions{display:flex;gap:12px;flex-wrap:wrap}
+  @media (max-width:880px){.hero .actions{justify-content:center}}
+  .counters{display:flex;gap:30px;flex-wrap:wrap;margin-top:34px}
+  @media (max-width:880px){.counters{justify-content:center}}
+  .counter b{display:block;font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums}
+  .counter span{font-size:.85rem;color:#B9D3E6}
+  .shelf{position:relative;display:flex;flex-direction:column;gap:22px;align-items:center}
+  .shelf-row{display:flex;gap:12px;align-items:flex-end;padding:0 14px 10px;border-bottom:10px solid #8A5A2B;border-radius:0 0 4px 4px;box-shadow:0 12px 18px -8px rgba(0,0,0,.45);min-width:300px;justify-content:center}
+  .mini{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.55rem;font-weight:700;text-align:center;line-height:1.15;position:relative;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),0 6px 12px rgba(0,0,0,.25);animation:bob 4s ease-in-out infinite;cursor:default;padding:6px}
+  .mini::before{content:"";position:absolute;inset:4px;border-radius:50%;border:2px dashed rgba(255,255,255,.5)}
+  .shelf-row .mini:nth-child(2){animation-delay:-1s}
+  .shelf-row .mini:nth-child(3){animation-delay:-2s}
+  .shelf-row .mini:nth-child(4){animation-delay:-3s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .shelf-label{font-size:.82rem;color:#B9D3E6;text-align:center}
+
+  /* ====== COMPARAISON ====== */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:820px){.compare{grid-template-columns:1fr}}
+  .cmp{border-radius:var(--radius);padding:26px 24px;border:1px solid var(--border);background:#fff}
+  .cmp.good{border:2px solid var(--teal);box-shadow:0 18px 40px rgba(14,159,154,.12)}
+  .cmp h3{font-size:1.15rem;margin-bottom:4px}
+  .cmp .sub{color:var(--muted);font-size:.9rem;margin-bottom:18px}
+  .cmp ol{list-style:none;margin:0;padding:0;counter-reset:s}
+  .cmp li{counter-increment:s;position:relative;padding:8px 0 8px 42px;font-size:.95rem;border-bottom:1px dashed var(--border)}
+  .cmp li:last-child{border-bottom:none}
+  .cmp li::before{content:counter(s);position:absolute;left:0;top:7px;width:28px;height:28px;border-radius:50%;background:var(--bg);color:var(--muted);font-weight:700;font-size:.82rem;display:flex;align-items:center;justify-content:center}
+  .cmp.good li::before{background:var(--teal);color:#fff}
+  .cmp .verdict{margin-top:16px;font-weight:600;font-size:.92rem;padding:10px 14px;border-radius:12px}
+  .cmp .verdict.slow{background:#FEF3F2;color:var(--vital)}
+  .cmp .verdict.fast{background:var(--teal-light);color:#0B7D79}
+
+  /* ====== EXPLORATEUR ====== */
+  .finder{display:grid;grid-template-columns:1.25fr .75fr;gap:24px;align-items:start}
+  @media (max-width:940px){.finder{grid-template-columns:1fr}}
+  .panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .filter-lbl{font-weight:600;font-size:.86rem;margin:0 0 8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .chip{border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 13px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink);transition:all .15s}
+  .chip:hover{border-color:var(--primary)}
+  .chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+  .chip.cat.on{background:var(--teal);border-color:var(--teal)}
+  .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .bcard{border:1px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;background:#fff;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:left;font:inherit;color:inherit;display:flex;gap:12px;align-items:flex-start}
+  .bcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,76,117,.12);border-color:var(--primary)}
+  .bcard.sel{border:2px solid var(--teal);background:var(--teal-light)}
+  .bcard .dot{flex:none;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+  .bcard .dot svg{width:18px;height:18px}
+  .bcard b{display:block;font-size:.9rem;line-height:1.3;margin-bottom:3px}
+  .bcard small{color:var(--muted);font-size:.74rem;display:block;line-height:1.35}
+  .count-line{font-size:.85rem;color:var(--muted);margin:0 0 12px}
+  .empty{color:var(--muted);font-style:italic;font-size:.9rem;padding:20px 0}
+  .note{font-size:.78rem;color:var(--muted);margin-top:14px}
+
+  .preview{position:sticky;top:20px;text-align:center}
+  .preview h3{font-size:1.05rem;margin-bottom:4px}
+  .preview p{color:var(--muted);font-size:.86rem;margin:0 0 14px}
+  .medal-big{width:210px;height:210px;margin:6px auto 14px;display:block;filter:drop-shadow(0 14px 22px rgba(15,76,117,.25));transition:transform .5s cubic-bezier(.2,.8,.2,1.3)}
+  .medal-big.pop{transform:scale(1.06) rotate(-3deg)}
+  .preview input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.9rem;margin-bottom:10px}
+  .issued{background:var(--bg);border-radius:12px;padding:12px;font-size:.82rem;text-align:left}
+  .issued div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
+  .issued span{color:var(--muted)}
+  .issued b{text-align:right}
+  .ok-line{display:flex;align-items:center;gap:6px;color:#0B7D79;font-weight:600;font-size:.82rem;margin-top:10px;justify-content:center}
+  .ok-line svg{width:16px;height:16px}
+
+  /* ====== ANATOMIE D'UNE FICHE ====== */
+  .anat{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+  @media (max-width:880px){.anat{grid-template-columns:1fr}}
+  .fiche{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:0 22px 45px rgba(20,38,58,.08);position:relative}
+  .fiche .ex{position:absolute;top:-12px;right:18px;background:var(--accent);color:var(--ink);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:999px}
+  .zone{border:2px dashed transparent;border-radius:12px;padding:10px 12px;margin:0 -12px 6px;transition:border-color .2s,background .2s;cursor:pointer}
+  .zone.hl{border-color:var(--teal);background:var(--teal-light)}
+  .zone h4{margin:0 0 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .zone p{margin:0;font-size:.9rem}
+  .fiche .title{font-size:1.15rem;font-weight:700}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-size:.74rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--primary-light);color:var(--primary)}
+  .tag.vital{background:#FEF3F2;color:var(--vital)}
+  .risk{height:10px;border-radius:999px;background:#F1F5F9;overflow:hidden;margin-top:6px}
+  .risk div{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--vital));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .explain{display:flex;flex-direction:column;gap:12px}
+  .exp{display:flex;gap:14px;padding:14px;border-radius:14px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:border-color .2s,transform .2s}
+  .exp:hover,.exp.hl{border-color:var(--teal);transform:translateX(4px)}
+  .exp .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+  .exp h3{font-size:.98rem;margin-bottom:2px}
+  .exp p{margin:0;font-size:.88rem;color:var(--muted)}
+
+  /* ====== PUBLICS ====== */
+  .tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+  .tab{border:1px solid var(--border);background:#fff;border-radius:999px;padding:9px 18px;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;color:var(--ink)}
+  .tab.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .tabpane{display:none;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:900px;margin:0 auto}
+  .tabpane.on{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;animation:fade .4s}
+  @media (max-width:640px){.tabpane.on{grid-template-columns:1fr}}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .tabpane .big{width:72px;height:72px;border-radius:20px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center}
+  .tabpane .big svg{width:36px;height:36px}
+  .tabpane h3{font-size:1.2rem;margin-bottom:8px}
+  .tabpane ul{margin:0;padding-left:20px}
+  .tabpane li{margin-bottom:6px}
+
+  /* ====== ÉTAPES ====== */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative}
+  @media (max-width:880px){.steps{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.steps{grid-template-columns:1fr}}
+  .step{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;transition:transform .2s}
+  .step:hover{transform:translateY(-5px)}
+  .step .ico{width:56px;height:56px;margin:0 auto 12px;border-radius:50%;background:var(--teal-light);color:var(--teal);display:flex;align-items:center;justify-content:center}
+  .step .ico svg{width:26px;height:26px}
+  .step h3{font-size:1.02rem;margin-bottom:6px}
+  .step p{margin:0;color:var(--muted);font-size:.9rem}
+
+  /* ====== OPEN BADGES ====== */
+  .ob{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:820px){.ob{grid-template-columns:1fr}}
+  .obc{border-radius:var(--radius);padding:24px;color:#fff}
+  .obc:nth-child(1){background:linear-gradient(135deg,#0F4C75,#1B6FA8)}
+  .obc:nth-child(2){background:linear-gradient(135deg,#0E7F7B,#0E9F9A)}
+  .obc:nth-child(3){background:linear-gradient(135deg,#B9701F,#F2A93B)}
+  .obc svg{width:34px;height:34px;margin-bottom:10px}
+  .obc h3{font-size:1.08rem;margin-bottom:6px}
+  .obc p{margin:0;font-size:.92rem;opacity:.92}
+
+  .cta{background:radial-gradient(circle at 85% 20%,#0E9F9A 0,transparent 50%),var(--primary-dark);color:#fff;text-align:center;border-radius:28px;padding:54px 22px;margin:0 16px 70px}
+  .cta h2{font-size:clamp(1.5rem,3.4vw,2.2rem);font-weight:800;margin-bottom:10px}
+  .cta p{color:#D6E6F2;margin:0 auto 24px;max-width:600px}
+  .cta .actions{justify-content:center}
+  footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 40px}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="logo"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></i>MC Pilote</div>
+      <h1>Toutes vos compétences méritent d'être <em>reconnues</em></h1>
+      <p class="lead">Un catalogue de badges de compétences déjà rédigés, prêts à attribuer à vos agents, salariés ou stagiaires. Plus besoin de partir d'une page blanche : vous choisissez sur l'étagère, vous attribuez.</p>
+      <div class="actions">
+        <a class="btn btn-accent" href="https://micro-certif.com/MC_Pilote/?utm_source=github&amp;utm_medium=module&amp;utm_campaign=decouverte-mc-pilote" target="_blank" rel="noopener">Explorer le catalogue</a>
+        <a class="btn btn-ghost" href="#explorer">Essayer ici</a>
+      </div>
+      <div class="counters" id="counters">
+        <div class="counter"><b data-count="206">0</b><span>badges prêts à attribuer</span></div>
+        <div class="counter"><b data-count="14">0</b><span>domaines</span></div>
+        <div class="counter"><b data-count="6">0</b><span>secteurs</span></div>
+      </div>
+    </div>
+    <div class="shelf" aria-hidden="true">
+      <div class="shelf-row">
+        <span class="mini" style="background:#0F4C75">Pilotage de projets</span>
+        <span class="mini" style="background:#0E9F9A">Veille régle&shy;mentaire</span>
+        <span class="mini" style="background:#B42318">Gestion de crise</span>
+        <span class="mini" style="background:#6D4AB8">Leader&shy;ship</span>
+      </div>
+      <div class="shelf-row">
+        <span class="mini" style="background:#D9690F">Commande publique</span>
+        <span class="mini" style="background:#2F7DD1">Usage pro de l'IA</span>
+        <span class="mini" style="background:#0B7D79">Gestion des conflits</span>
+        <span class="mini" style="background:#9C3C6B">Projets européens</span>
+      </div>
+      <div class="shelf-label">Le principe « sur étagère » : des badges déjà conçus, à prendre et à attribuer</div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== COMPARAISON ====== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Pourquoi un catalogue sur étagère ?</span>
+      <h2>Reconnaître une compétence, sans tout réinventer</h2>
+      <p>Créer un badge de compétence sérieux demande du temps et de l'expertise. Le catalogue a déjà fait ce travail pour vous.</p>
+    </div>
+    <div class="compare">
+      <div class="cmp reveal">
+        <h3>Créer chaque badge soi-même</h3>
+        <div class="sub">La démarche classique</div>
+        <ol>
+          <li>Identifier et nommer la compétence</li>
+          <li>Rédiger la description et les attendus</li>
+          <li>Évaluer son importance pour l'organisation</li>
+          <li>Concevoir le visuel du badge</li>
+          <li>Faire valider le tout en interne</li>
+          <li>Attribuer le badge</li>
+        </ol>
+        <div class="verdict slow">Un vrai projet à mener, badge par badge</div>
+      </div>
+      <div class="cmp good reveal">
+        <h3>Choisir dans MC Pilote</h3>
+        <div class="sub">La démarche sur étagère</div>
+        <ol>
+          <li>Filtrer par secteur, domaine ou catégorie</li>
+          <li>Lire la fiche : description, criticité, risque de perte</li>
+          <li>Ajouter le badge à vos favoris</li>
+          <li>L'attribuer à vos bénéficiaires</li>
+        </ol>
+        <div class="verdict fast">Le badge est prêt : vous vous concentrez sur les personnes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== EXPLORATEUR ====== -->
+<section class="section alt" id="explorer">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">À vous de jouer</span>
+      <h2>Trouvez un badge en trois clics</h2>
+      <p>Filtrez, choisissez un badge, saisissez un prénom : découvrez le badge tel que votre collaborateur le recevra.</p>
+    </div>
+    <div class="finder">
+      <div class="panel reveal">
+        <p class="filter-lbl">Catégorie</p>
+        <div class="chips" id="catChips"></div>
+        <p class="filter-lbl">Domaine</p>
+        <div class="chips" id="domChips"></div>
+        <p class="count-line" id="countLine"></p>
+        <div class="results" id="results"></div>
+        <p class="note">Aperçu : une sélection d'exemples du catalogue. Les 206 badges, leurs fiches détaillées et les filtres par secteur sont dans MC Pilote.</p>
+      </div>
+      <div class="panel preview reveal">
+        <h3>Aperçu du badge</h3>
+        <p>Personnalisez avec le nom du bénéficiaire.</p>
+        <svg class="medal-big" id="medal" viewBox="0 0 220 220"></svg>
+        <input type="text" id="benef" placeholder="Prénom Nom du bénéficiaire" maxlength="40">
+        <div class="issued" id="issued"></div>
+        <div class="ok-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Open Badge 3.0 signé et vérifiable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ANATOMIE D'UNE FICHE ====== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Plus qu'un badge</span>
+      <h2>Chaque fiche aide à piloter vos compétences</h2>
+      <p>Les fiches ne se contentent pas de décrire : elles indiquent ce que coûte l'absence d'une compétence et le risque de la perdre.</p>
+    </div>
+    <div class="anat">
+      <div class="fiche reveal" id="fiche">
+        <span class="ex">Fiche exemple</span>
+        <div class="zone" data-z="1"><h4>Intitulé et type</h4><div class="title">Référent continuité et gestion de crise</div><div class="tags" style="margin-top:6px"><span class="tag">Rôle</span><span class="tag">Qualité, Risques &amp; Sécurité</span></div></div>
+        <div class="zone" data-z="2"><h4>Description</h4><p>Organise la continuité d'activité et coordonne la réponse de la structure en situation de crise.</p></div>
+        <div class="zone" data-z="3"><h4>Impact de l'absence de cette compétence</h4><p>Réaction désorganisée en cas d'incident majeur, services interrompus plus longtemps.</p></div>
+        <div class="zone" data-z="4"><h4>Criticité et risque de perte</h4><div class="tags"><span class="tag vital">Criticité : Vital</span></div><div class="risk"><div id="riskBar"></div></div></div>
+        <div class="zone" data-z="5"><h4>Secteurs</h4><div class="tags"><span class="tag">Fonction publique territoriale</span><span class="tag">Santé privée</span><span class="tag">Industrie</span></div></div>
+      </div>
+      <div class="explain">
+        <div class="exp reveal" data-z="1"><span class="n">1</span><div><h3>Rôle, compétence visible ou tacite</h3><p>Le catalogue reconnaît aussi les compétences qu'on ne voit pas sur un CV mais qui font tourner la structure.</p></div></div>
+        <div class="exp reveal" data-z="2"><span class="n">2</span><div><h3>Une description prête à l'emploi</h3><p>Rédigée une fois pour toutes, claire pour la personne qui reçoit le badge comme pour celle qui le consulte.</p></div></div>
+        <div class="exp reveal" data-z="3"><span class="n">3</span><div><h3>L'impact de l'absence</h3><p>Pour argumenter auprès de la direction : ce qui se passe si personne ne détient la compétence.</p></div></div>
+        <div class="exp reveal" data-z="4"><span class="n">4</span><div><h3>Criticité et risque de perte</h3><p>De « Important » à « Vital » : repérez les compétences rares à sécuriser avant un départ.</p></div></div>
+        <div class="exp reveal" data-z="5"><span class="n">5</span><div><h3>Les secteurs concernés</h3><p>Fonction publique, santé, industrie, services : filtrez ce qui correspond à votre organisation.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== PUBLICS ====== -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Pour qui ?</span>
+      <h2>Un catalogue, plusieurs usages</h2>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" type="button" data-t="fp">Fonction publique</button>
+      <button class="tab" type="button" data-t="sante">Santé &amp; médico-social</button>
+      <button class="tab" type="button" data-t="ent">Entreprises</button>
+      <button class="tab" type="button" data-t="of">Organismes de formation</button>
+    </div>
+    <div class="tabpane on" id="t-fp">
+      <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M12 3 2 8h20z"/></svg></div>
+      <div><h3>Collectivités, État, hôpitaux publics</h3><ul>
+        <li>Valoriser les missions de référent (déontologie, laïcité, continuité…) qui n'apparaissent nulle part.</li>
+        <li>Identifier les compétences rares avant un départ en retraite ou une mobilité.</li>
+        <li>Nourrir les entretiens professionnels et les plans de formation.</li></ul></div>
+    </div>
+    <div class="tabpane" id="t-sante">
+      <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+      <div><h3>Établissements de santé et médico-sociaux</h3><ul>
+        <li>Reconnaître les savoir-faire de terrain, comme l'évaluation et la prise en charge de la douleur.</li>
+        <li>Rendre visibles les compétences relationnelles et de prévention.</li>
+        <li>Fidéliser les équipes en reconnaissant leur expertise.</li></ul></div>
+    </div>
+    <div class="tabpane" id="t-ent">
+      <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+      <div><h3>PME, industrie et services</h3><ul>
+        <li>Cartographier les compétences clés de l'entreprise.</li>
+        <li>Valoriser les soft skills : leadership, gestion des conflits, animation d'équipes.</li>
+        <li>Renforcer la marque employeur avec des badges partageables.</li></ul></div>
+    </div>
+    <div class="tabpane" id="t-of">
+      <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div><h3>Organismes de formation et formateurs</h3><ul>
+        <li>Délivrer un badge numérique en fin de formation, en plus de l'attestation.</li>
+        <li>Adosser vos programmes à des compétences déjà décrites.</li>
+        <li>Offrir à vos stagiaires une preuve de compétence vérifiable et partageable.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ÉTAPES ====== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Mode d'emploi</span>
+      <h2>De l'étagère au profil de vos collaborateurs</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div><h3>Explorer</h3><p>Filtrez par référentiel, secteur, domaine ou catégorie.</p></div>
+      <div class="step reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></div><h3>Sélectionner</h3><p>Ajoutez vos badges en favoris pour constituer votre sélection.</p></div>
+      <div class="step reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div><h3>Attribuer</h3><p>Délivrez les badges à vos bénéficiaires, signés en Open Badges 3.0.</p></div>
+      <div class="step reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div><h3>Compléter</h3><p>Une compétence manque ? Proposez-la : elle peut devenir un badge sur mesure.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== OPEN BADGES ====== -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">La norme Open Badges 3.0</span>
+      <h2>Des badges qui ont de la valeur partout</h2>
+    </div>
+    <div class="ob">
+      <div class="obc reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3>Signés et infalsifiables</h3><p>Chaque badge est signé numériquement : son authenticité se vérifie en un clic.</p></div>
+      <div class="obc reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4M12 2v13"/></svg><h3>Portables et partageables</h3><p>Le bénéficiaire le garde, le partage sur LinkedIn ou l'ajoute à son CV.</p></div>
+      <div class="obc reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg><h3>Un standard international</h3><p>Une norme ouverte, reconnue bien au-delà de votre organisation.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA ====== -->
+<section class="cta reveal">
+  <h2>Votre prochain badge est déjà sur l'étagère</h2>
+  <p>Parcourez les 206 badges de MC Pilote et commencez à reconnaître les compétences de vos équipes.</p>
+  <div class="actions">
+    <a class="btn btn-accent" href="https://micro-certif.com/MC_Pilote/?utm_source=github&amp;utm_medium=module&amp;utm_campaign=decouverte-mc-pilote" target="_blank" rel="noopener">Explorer le catalogue</a>
+    <a class="btn btn-ghost" href="https://micro-certif.com/MC_Pilote/offres.php?utm_source=github&amp;utm_medium=module&amp;utm_campaign=decouverte-mc-pilote" target="_blank" rel="noopener">Voir les offres</a>
+    <a class="btn btn-ghost" href="https://micro-certif.com/MC_Pilote/contact.php?type=badge&amp;utm_source=github&amp;utm_medium=module&amp;utm_campaign=decouverte-mc-pilote" target="_blank" rel="noopener">Proposer un badge</a>
+  </div>
+</section>
+
+<footer>
+  <a href="https://micro-certif.com/?utm_source=github&amp;utm_medium=module&amp;utm_campaign=decouverte-mc-pilote" target="_blank" rel="noopener">Micro-Certif</a> · MC Pilote — Pilotage des compétences
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ==========================================================
+     Exemples du catalogue — à compléter ou remplacer depuis la
+     base MC Pilote (titre, domaine, catégorie).
+     ========================================================== */
+  const BADGES = [
+    {t:'Gestion de la commande publique',              d:'Finance, Achats & Gestion',               c:'Compétence visible'},
+    {t:'Pilotage de projets publics',                  d:'Direction & Pilotage',                    c:'Compétence visible'},
+    {t:'Gestion de projets européens',                 d:'Développement territorial & Partenariats',c:'Compétence visible'},
+    {t:'Recherche de financements',                    d:'Finance, Achats & Gestion',               c:'Compétence visible'},
+    {t:'Référent Continuité et Gestion de Crise',      d:'Qualité, Risques & Sécurité',             c:'Rôle'},
+    {t:'Référent déontologie / laïcité',               d:'Juridique, Éthique & Conformité',         c:'Rôle'},
+    {t:'Utilisation professionnelle de l\'IA',          d:'Numérique & SI',                          c:'Compétence visible'},
+    {t:'Veille réglementaire',                         d:'Juridique, Éthique & Conformité',         c:'Compétence visible'},
+    {t:'Animation d\'équipes multisites',               d:'Management & Organisation',               c:'Compétence visible'},
+    {t:'Gestion des conflits',                         d:'Soft skills',                             c:'Compétence tacite'},
+    {t:'Leadership stratégique',                       d:'Direction & Pilotage',                    c:'Compétence tacite'},
+    {t:'Prévention du burn-out',                       d:'Ressources humaines',                     c:'Compétence visible'},
+    {t:'Évaluer et prendre en charge la douleur du patient', d:'Savoirs métier & Fonctionnement',   c:'Compétence visible'}
+  ];
+  const DOMAINES = ['Direction & Pilotage','Management & Organisation','Ressources humaines','Numérique & SI','Communication & Relations','Finance, Achats & Gestion','Juridique, Éthique & Conformité','Qualité, Risques & Sécurité','Environnement & Transition écologique','Développement territorial & Partenariats','Social, Inclusion & Accompagnement','Savoirs métier & Fonctionnement','Soft skills','Formation & Développement des compétences'];
+  const CATS = ['Rôle','Compétence visible','Compétence tacite'];
+  const COLORS = {'Direction & Pilotage':'#0F4C75','Management & Organisation':'#6D4AB8','Ressources humaines':'#9C3C6B','Numérique & SI':'#2F7DD1','Communication & Relations':'#0891B2','Finance, Achats & Gestion':'#D9690F','Juridique, Éthique & Conformité':'#475569','Qualité, Risques & Sécurité':'#B42318','Environnement & Transition écologique':'#15803D','Développement territorial & Partenariats':'#7C5E10','Social, Inclusion & Accompagnement':'#C2410C','Savoirs métier & Fonctionnement':'#0B7D79','Soft skills':'#0E9F9A','Formation & Développement des compétences':'#4F46E5'};
+  const CAT_ICON = {
+    'Rôle':'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    'Compétence visible':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
+    'Compétence tacite':'<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>'
+  };
+
+  let fCat = null, fDom = null, current = BADGES[4];
+
+  function chips(){
+    $('#catChips').innerHTML = '<button type="button" class="chip cat'+(fCat ? '' : ' on')+'" data-cat="">Toutes</button>'
+      + CATS.map(c => '<button type="button" class="chip cat'+(fCat === c ? ' on' : '')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');
+    const used = DOMAINES.filter(d => BADGES.some(b => b.d === d));
+    $('#domChips').innerHTML = '<button type="button" class="chip'+(fDom ? '' : ' on')+'" data-dom="">Tous</button>'
+      + used.map(d => '<button type="button" class="chip'+(fDom === d ? ' on' : '')+'" data-dom="'+esc(d)+'">'+esc(d)+'</button>').join('');
+  }
+  function list(){
+    const res = BADGES.filter(b => (!fCat || b.c === fCat) && (!fDom || b.d === fDom));
+    $('#countLine').textContent = res.length + ' exemple' + (res.length > 1 ? 's' : '') + ' affiché' + (res.length > 1 ? 's' : '');
+    $('#results').innerHTML = res.length ? res.map(b => {
+      const i = BADGES.indexOf(b);
+      return '<button type="button" class="bcard'+(b === current ? ' sel' : '')+'" data-i="'+i+'">'
+        + '<span class="dot" style="background:'+(COLORS[b.d] || '#0F4C75')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+CAT_ICON[b.c]+'</svg></span>'
+        + '<span><b>'+esc(b.t)+'</b><small>'+esc(b.c)+' · '+esc(b.d)+'</small></span></button>';
+    }).join('') : '<div class="empty">Aucun exemple pour cette combinaison dans cet aperçu : le catalogue complet en contient bien d\'autres.</div>';
+  }
+
+  /* ---------- Médaille SVG ---------- */
+  function wrapText(t, max){
+    const words = t.split(' '), lines = [];
+    let l = '';
+    words.forEach(w => { if ((l + ' ' + w).trim().length > max && l) { lines.push(l); l = w; } else l = (l + ' ' + w).trim(); });
+    if (l) lines.push(l);
+    return lines.slice(0, 4);
+  }
+  function medal(){
+    const b = current, col = COLORS[b.d] || '#0F4C75';
+    const lines = wrapText(b.t.toUpperCase(), 15);
+    const y0 = 112 - (lines.length - 1) * 8;
+    const pts = [];
+    for (let i = 0; i < 24; i++) {
+      const a = Math.PI * 2 * i / 24 - Math.PI / 2, r = i % 2 ? 92 : 100;
+      pts.push((110 + r * Math.cos(a)).toFixed(1) + ',' + (110 + r * Math.sin(a)).toFixed(1));
+    }
+    $('#medal').innerHTML =
+        '<polygon points="'+pts.join(' ')+'" fill="'+col+'"/>'
+      + '<circle cx="110" cy="110" r="80" fill="#fff"/>'
+      + '<circle cx="110" cy="110" r="72" fill="'+col+'"/>'
+      + '<circle cx="110" cy="110" r="66" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-dasharray="4 4"/>'
+      + '<g transform="translate(98 52)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><svg width="24" height="24" viewBox="0 0 24 24">'+CAT_ICON[b.c]+'</svg></g>'
+      + lines.map((l, i) => '<text x="110" y="'+(y0 + i * 16)+'" text-anchor="middle" fill="#fff" font-family="Poppins,Arial,sans-serif" font-size="12.5" font-weight="700">'+esc(l)+'</text>').join('')
+      + '<text x="110" y="166" text-anchor="middle" fill="rgba(255,255,255,.85)" font-family="Poppins,Arial,sans-serif" font-size="9" font-weight="600" letter-spacing="1.5">MC PILOTE</text>';
+    const m = $('#medal');
+    if (!reduced) { m.classList.remove('pop'); void m.getBoundingClientRect(); m.classList.add('pop'); setTimeout(() => m.classList.remove('pop'), 500); }
+    issued();
+  }
+  function issued(){
+    const name = $('#benef').value.trim() || 'Votre collaborateur';
+    $('#issued').innerHTML = '<div><span>Bénéficiaire</span><b>'+esc(name)+'</b></div>'
+      + '<div><span>Badge</span><b>'+esc(current.t)+'</b></div>'
+      + '<div><span>Catégorie</span><b>'+esc(current.c)+'</b></div>'
+      + '<div><span>Délivré le</span><b>'+new Date().toLocaleDateString('fr-FR')+'</b></div>';
+  }
+
+  $('#catChips').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; fCat = b.dataset.cat || null; chips(); list(); });
+  $('#domChips').addEventListener('click', e => { const b = e.target.closest('[data-dom]'); if (!b) return; fDom = b.dataset.dom || null; chips(); list(); });
+  $('#results').addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (!b) return; current = BADGES[+b.dataset.i]; list(); medal(); });
+  $('#benef').addEventListener('input', issued);
+  chips(); list(); medal();
+
+  /* ---------- Anatomie : survol croisé ---------- */
+  function hl(z){
+    $$('.zone, .exp').forEach(el => el.classList.toggle('hl', el.dataset.z === z));
+  }
+  $$('.zone, .exp').forEach(el => {
+    el.addEventListener('mouseenter', () => hl(el.dataset.z));
+    el.addEventListener('click', () => hl(el.dataset.z));
+  });
+  $('#fiche').addEventListener('mouseleave', () => hl(null));
+  $('.explain').addEventListener('mouseleave', () => hl(null));
+
+  /* ---------- Onglets ---------- */
+  $('#tabs').addEventListener('click', e => {
+    const t = e.target.closest('[data-t]'); if (!t) return;
+    $$('#tabs .tab').forEach(x => x.classList.toggle('on', x === t));
+    $$('.tabpane').forEach(p => p.classList.toggle('on', p.id === 't-' + t.dataset.t));
+  });
+
+  /* ---------- Compteurs et apparitions ---------- */
+  function countUp(el){
+    const target = +el.dataset.count;
+    if (reduced) { el.textContent = target; return; }
+    const t0 = performance.now();
+    const step = t => { const p = Math.min((t - t0) / 1300, 1); el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  function activate(el){
+    el.classList.add('in');
+    $$('[data-count]', el).forEach(countUp);
+    if (el.id === 'fiche') setTimeout(() => $('#riskBar').style.width = '85%', 300);
+  }
+  const targets = $$('.reveal').concat([$('#counters')]);
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(en => en.forEach(x => { if (x.isIntersecting) { activate(x.target); io.unobserve(x.target); } }), {threshold:.15});
+    targets.forEach(t => io.observe(t));
+  } else targets.forEach(activate);
+})();
+</script>
+</body>
+</html>
 
